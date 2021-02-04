@@ -132,6 +132,7 @@ class _SignInState extends State<SignIn> {
   }
 
   onLogin() {
+    FocusScope.of(context).requestFocus(FocusNode());
     if (key.currentState.validate()) {
       cubit.doLogin(context);
     }
