@@ -9,7 +9,7 @@ part 'navigator_state.dart';
 class NaCubit extends Cubit<NaState> {
   NaCubit() : super(InitState());
 
-  static NaCubit of<T>(BuildContext context) {
+  static NaCubit of(BuildContext context) {
     return BlocProvider.of<NaCubit>(context);
   }
 

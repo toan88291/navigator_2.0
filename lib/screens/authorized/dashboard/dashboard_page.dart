@@ -13,10 +13,16 @@ class _DashboardPageState extends State<DashboardPage> with AutomaticKeepAliveCl
   final cubit = DashboardCubit();
 
   @override
+  void initState() {
+    super.initState();
+    cubit.getProfile();
+  }
+
+  @override
   Widget build(BuildContext context) {
     super.build(context);
     return BlocBuilder<DashboardCubit, DashboardState>(
-      cubit: cubit..getProfile(),
+      cubit: cubit,
       builder: (context, state) {
         return state.when(init: () {
           return Container(
@@ -30,7 +36,6 @@ class _DashboardPageState extends State<DashboardPage> with AutomaticKeepAliveCl
             ),
           );
         }, loaded: (data) {
-          print(data);
           return Container(
             alignment: Alignment.center,
             padding: const EdgeInsets.all(20),

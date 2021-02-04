@@ -10,7 +10,7 @@ part 'app_state.dart';
 class AppCubit extends Cubit<AppState> {
   AppCubit() : super(InitState());
 
-  static AppCubit of<T>(BuildContext context) {
+  static AppCubit of(BuildContext context) {
     return BlocProvider.of<AppCubit>(context);
   }
 
