@@ -108,6 +108,19 @@ class _SignInState extends State<SignIn> {
                         ),
                       ),
                     ),
+                    FlatButton(
+                      onPressed: () => NaCubit.of(context).pushThen(SignUp()),
+                      minWidth: double.infinity,
+                      height: 48,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(20))
+                      ),
+                      color: Colors.blue,
+                      child: Text(
+                        'Register',
+                        style: TextStyle(fontSize: 20, color: Colors.white),
+                      ),
+                    ),
                   ],
                 ),
               ),
