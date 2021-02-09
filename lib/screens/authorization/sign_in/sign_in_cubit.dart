@@ -15,26 +15,24 @@ class SignInCubit extends Cubit<SignInState> {
 
   SignInCubit() : super(InitState());
 
-  String validateUser(String user) {
-    if (!validateUserName(user)) {
-      emit(ValidateState(state.dataSignIn.copyWith(errorUser: 'Error user')));
-      return '';
-    }
-    emit(ValidateState(state.dataSignIn.copyWith(errorUser: '', userName: user,messageError: '')));
-    return null;
+  void saveUser(String user) {
+    emit(SaveTextState(state.dataSignIn.copyWith(userName: user)));
   }
 
-  String validatePass(String pass) {
-    if (!validatePassword(pass)) {
-      emit(ValidateState(state.dataSignIn.copyWith(errorPass: 'Error pass')));
-      return '';
-    }
-    emit(ValidateState(state.dataSignIn.copyWith(errorPass: '', passWord: pass,messageError: '')));
-    return null;
+  void savePass(String pass) {
+    emit(SaveTextState(state.dataSignIn.copyWith(passWord: pass)));
   }
 
   Future<void> doLogin(BuildContext context) async {
-    emit(LoadingState(state.dataSignIn.copyWith(isLoading: true,messageError: '')));
+    if (!validateUserName(state.dataSignIn.userName)) {
+      emit(ValidateState(state.dataSignIn.copyWith(errorText: 'User error')));
+      return;
+    }
+    if (!validatePassword(state.dataSignIn.passWord)) {
+      emit(ValidateState(state.dataSignIn.copyWith(errorText: 'Pass error')));
+      return;
+    }
+    emit(LoadingState(state.dataSignIn.copyWith(isLoading: true,messageError: '',errorText: '')));
     final resultLogin = await _appRepository.signIn(
         LoginParams(
             username: state.dataSignIn.userName,

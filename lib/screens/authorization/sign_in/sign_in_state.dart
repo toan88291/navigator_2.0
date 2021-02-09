@@ -7,7 +7,11 @@ abstract class SignInState {
 }
 
 class InitState extends SignInState {
-  InitState() : super(dataSignIn: DataSignIn(isLoading: false,errorPass: '',errorUser: '',messageError: ''));
+  InitState() : super(dataSignIn: DataSignIn(isLoading: false,errorText: ''));
+}
+
+class SaveTextState extends SignInState {
+  SaveTextState(DataSignIn dataSignIn) : super(dataSignIn: dataSignIn);
 }
 
 class ValidateState extends SignInState {
@@ -29,28 +33,25 @@ class ErrorState extends SignInState {
 class DataSignIn {
   bool isLoading;
   String userName, passWord;
-  String errorUser, errorPass;
- String messageError;
+  String errorText;
+  String messageError;
   DataSignIn(
       {this.isLoading,
         this.userName,
         this.passWord,
-        this.errorPass,
-        this.messageError,
-        this.errorUser});
+        this.errorText,
+        this.messageError});
 
   DataSignIn copyWith(
       {bool isLoading,
         String userName,
         String passWord,
         String messageError,
-        String errorUser,
-        String errorPass}) =>
+        String errorText}) =>
       DataSignIn(
           isLoading: isLoading ?? this.isLoading,
           userName: userName ?? this.userName,
           passWord: passWord ?? this.passWord,
-          errorPass: errorPass ?? this.errorPass,
-          messageError: messageError ?? this.messageError,
-          errorUser: errorUser ?? this.errorUser);
+          errorText: errorText ?? this.errorText,
+          messageError: messageError ?? this.messageError);
 }

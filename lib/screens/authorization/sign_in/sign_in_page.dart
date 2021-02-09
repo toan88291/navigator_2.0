@@ -1,6 +1,7 @@
 import 'package:example_navigator_20/data/cubit/navigator/navigator_cubit.dart';
 import 'package:example_navigator_20/screens/authorization/sign_in/sign_in_cubit.dart';
 import 'package:example_navigator_20/screens/authorization/sign_up/sign_up.dart';
+import 'package:example_navigator_20/utils/push_notice.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -16,8 +17,13 @@ class _SignInState extends State<SignIn> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<SignInCubit, SignInState>(
+    return BlocConsumer<SignInCubit, SignInState>(
       cubit: cubit,
+      listener: (context,state) {
+        if (state is ErrorState) {
+          KPushNotice.show(context, state.dataSignIn.messageError, 'Error');
+        }
+      },
       builder: (context, state) {
         return Scaffold(
           appBar: AppBar(
@@ -41,42 +47,31 @@ class _SignInState extends State<SignIn> {
                     ),
                     TextFormField(
                       decoration: InputDecoration(hintText: 'User name',filled: true),
-                      validator: (value) => cubit.validateUser(value),
-                    ),
-                    if(state.dataSignIn.errorUser.isNotEmpty) Container(
-                      padding: const EdgeInsets.only(top: 20.0),
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        state?.dataSignIn?.errorUser ?? '',
-                        style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.red
-                        ),
-                      ),
+                      onSaved: (value) => cubit.saveUser(value),
                     ),
                     const SizedBox(
                       height: 20,
                     ),
                     TextFormField(
                       decoration: InputDecoration(hintText: 'Password',filled: true),
-                      validator: (value) => cubit.validatePass(value),
+                      onSaved: (value) => cubit.savePass(value),
                       obscureText: true,
-                    ),
-                    if(state.dataSignIn.errorPass.isNotEmpty) Container(
-                      padding: const EdgeInsets.only(top: 20.0),
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        state?.dataSignIn?.errorPass ?? '',
-                        style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.red
-                        ),
-                      ),
                     ),
                     const SizedBox(
                       height: 40,
+                    ),
+                    if (state.dataSignIn.errorText.isNotEmpty) Container(
+                      margin: const EdgeInsets.only(bottom: 20),
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: Colors.blue.withOpacity(0.3),
+                        borderRadius: BorderRadius.all(Radius.circular(8))
+                      ),
+                      width: double.infinity,
+                      child: Text(
+                        state.dataSignIn.errorText,
+                        style: TextStyle(fontSize: 20, color: Colors.red),
+                      ),
                     ),
                     FlatButton(
                       onPressed: () => onLogin(),
@@ -95,18 +90,6 @@ class _SignInState extends State<SignIn> {
                     ),
                     const SizedBox(
                       height: 20,
-                    ),
-                    if(state.dataSignIn.messageError.isNotEmpty) Container(
-                      padding: const EdgeInsets.only(top: 20.0),
-                      alignment: Alignment.center,
-                      child: Text(
-                        state?.dataSignIn?.messageError ?? '',
-                        style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.red
-                        ),
-                      ),
                     ),
                     FlatButton(
                       onPressed: () => NaCubit.of(context).pushThen(SignUp()),
@@ -133,8 +116,7 @@ class _SignInState extends State<SignIn> {
 
   onLogin() {
     FocusScope.of(context).requestFocus(FocusNode());
-    if (key.currentState.validate()) {
-      cubit.doLogin(context);
-    }
+    key.currentState.save();
+    cubit.doLogin(context);
   }
 }
